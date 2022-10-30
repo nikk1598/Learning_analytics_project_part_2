@@ -1,0 +1,57 @@
+preprocessing:
+ df_path: '../data/data.parquet.gzip'
+ x_test_path: '../data/x_test.parquet.gzip'
+ target_column: DEBT
+ values_in_target_column: [0, 1]
+ change_type_columns: {'DISC_ID': 'category',
+                       'TYPE_NAME': 'category',
+                       'GENDER': 'category',
+                       'CITIZENSHIP': 'category',
+                       'SEMESTER': 'category',
+                       'EXAM_TYPE': 'category',
+                       'EXAM_SUBJECT_1': 'category',
+                       'EXAM_SUBJECT_2': 'category',
+                       'EXAM_SUBJECT_3': 'category',
+                       'ADMITTED_SUBJECT_PRIZE_LEVEL': 'category',
+                       'REGION_ID': 'category'}
+ not_binary_columns: [ 'SEMESTER', 'DISC_ID', 'TYPE_NAME', 'GENDER',
+                       'CITIZENSHIP', 'EXAM_TYPE', 'EXAM_SUBJECT_1', 'EXAM_SUBJECT_2',
+                       'EXAM_SUBJECT_3', 'ADMITTED_SUBJECT_PRIZE_LEVEL',
+                       'REGION_ID' ]
+ gender_column: GENDER
+ values_in_gender_column: ['М', 'Ж']
+ exam_type_column: EXAM_TYPE
+ values_in_exam_type_column: ['ЕГЭ', 'ВИ', 'ОЛИМПИАДА']
+ type_name_column: TYPE_NAME
+ values_in_type_name_column: ['Экзамен', 'Зачет', 'Дифференцированный зачет', 'Курсовой проект']
+ addmited_exam_columns: ['ADMITTED_EXAM_1', 'ADMITTED_EXAM_2', 'ADMITTED_EXAM_3']
+ shuffle: True
+ test_size: 0.16
+ random_state: 10
+
+training:
+ target_column: DEBT
+ test_size: 0.16
+ random_state: 10
+ category_features: ['SEMESTER', 'DISC_ID', 'TYPE_NAME', 'GENDER', 'CITIZENSHIP',
+            'EXAM_TYPE', 'EXAM_SUBJECT_1', 'EXAM_SUBJECT_2',
+            'EXAM_SUBJECT_3', 'ADMITTED_SUBJECT_PRIZE_LEVEL', 'REGION_ID']
+ early_stopping_rounds: 2
+ n_folds: 5
+ n_estimators: 826
+ learning_rate: 0.299
+ n_trials: 20
+ shuffle: True
+ metrics_path: '../report/metrics.json'
+ model_path: '../models/trained_model.json'
+ study_path: '../models/study.json'
+
+prediction:
+ prediction_path: '../data/prediction.parquet.gzip'
+
+endpoints:
+  train: 'http://fastapi:8000/train'
+  prediction: 'http://fastapi:8000/predict'
+
+report:
+ feat_imp_path: '../models/feat_imp.png'
